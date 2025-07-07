@@ -103,7 +103,15 @@ pub fn write_response<T>(mut w: impl io::Write, response: &HttpResponse<T>) -> R
     )?;
 
     for (k, v) in response.headers() {
-        writeln!(w, "{}: {}\r", k, v.to_str()?)?;
+        if k.as_str() == "upgrade" {
+            writeln!(w, "Upgrade: {}\r", v.to_str()?)?;
+        } else if k.as_str() == "connection" {
+            writeln!(w, "Connection: {}\r", v.to_str()?)?;
+        } else if k.as_str() == "sec-websocket-accept" {
+            writeln!(w, "Sec-WebSocket-Accept: {}\r", v.to_str()?)?;
+        } else {
+            writeln!(w, "{}: {}\r", k, v.to_str()?)?;
+        }
     }
 
     writeln!(w, "\r")?;

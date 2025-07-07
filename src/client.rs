@@ -232,6 +232,8 @@ impl IntoClientRequest for Uri {
             return Err(Error::Url(UrlError::EmptyHostName));
         }
 
+        
+        println!("lel");
         let req = Request::builder()
             .method("GET")
             .header("Host", host)
